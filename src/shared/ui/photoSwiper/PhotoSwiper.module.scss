@@ -64,3 +64,11 @@
   object-fit: cover;
   border-radius: 8px;
 }
+
+.swiper__loading {
+  height: 185px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

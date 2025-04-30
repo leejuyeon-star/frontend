@@ -7,13 +7,12 @@ export const useProfileImageApi = () => {
   const { get, post } = useApi();
   const prevUrl = useRef<string | null>(null);
 
+  // 더이상 사용하지 않을때 삭제 예정
   const getProfileImage = useCallback(
     async (userId: number): Promise<string | null> => {
       try {
-        // 캐시 방지를 위한 타임스탬프 추가
-        const timestamp = Date.now();
         const response: Blob = await get(
-          `${PROFILE_IMAGE_URL}/${userId}?t=${timestamp}`, 
+          `${PROFILE_IMAGE_URL}/${userId}`, 
           {
             responseType: "blob",
           }

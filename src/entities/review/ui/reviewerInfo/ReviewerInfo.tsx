@@ -7,6 +7,7 @@ import myProfileIcon from "@shared/assets/images/profile/myProfile.svg";
 import moreIcon from "@shared/assets/images/more.svg";
 import { useProfileImageApi } from "@/shared/api/user/useProfileImagesApi";
 import { useNavigate } from "react-router-dom";
+import { useReviewImageApi } from "@/shared/api/images";
 
 interface ReviewerInfoProps {
   nickname: string;
@@ -32,25 +33,8 @@ const ReviewerInfo = ({
   const reviewMoreRef = useRef<HTMLDivElement | null>(null);
   const isOwner = currentUserId === userId;
   const navigate = useNavigate();
-
-  const { getProfileImage } = useProfileImageApi();
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadProfileImage = async () => {
-      if (isProfileImageExist && userId) {
-        try {
-          const imageUrl = await getProfileImage(userId);
-          setProfileImageUrl(imageUrl);
-        } catch (error) {
-          console.error("프로필 이미지 로드 실패:", error);
-          setProfileImageUrl(null);
-        }
-      }
-    };
-
-    loadProfileImage();
-  }, [isProfileImageExist, userId, getProfileImage]);
+  const { getProfileImageUrl } = useReviewImageApi();
+  const profileImageUrl = getProfileImageUrl(String(userId));
 
   // 표시할 버튼 개수 계산
   const getVisibleButtonCount = () => {
@@ -102,7 +86,7 @@ const ReviewerInfo = ({
         <img
           onClick={()=>{navigate(`/userpage/${userId}`)}}
           className={styles.reviewerInfo__profilePicture}
-          src={profileImageUrl || (isOwner ? myProfileIcon : profileIcon)}
+          src={(isProfileImageExist && profileImageUrl) || (isOwner ? myProfileIcon : profileIcon)}
           alt={`${nickname}의 프로필`}
         />
         <div className={styles.reviewerInfo__details}>
